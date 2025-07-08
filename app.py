@@ -277,9 +277,19 @@ if st.session_state.df_final is not None:
             st.success("🎉 グラフが完成しました！")
             if color_col != "色分けしない":
                 st.caption("※凡例をクリックすると表示・非表示が切り替えられます")
-            img_col, html_col = st.columns(2)
-            with img_col:
-                st.download_button("画像として保存 (PNG)", st.session_state.fig_a.to_image(format="png"), "scatter_plot.png", "image/png", use_container_width=True)
+            
+            # --- ▼▼▼ ここから変更 ▼▼▼ ---
+            svg_col, html_col = st.columns(2)
+            with svg_col:
+                # PNGをSVGに変更
+                st.download_button(
+                    label="画像として保存 (SVG)",
+                    data=st.session_state.fig_a.to_image(format="svg"),
+                    file_name="scatter_plot.svg",
+                    mime="image/svg+xml",
+                    use_container_width=True
+                )
+            # --- ▲▲▲ ここまで変更 ▲▲▲ ---
             with html_col:
                 st.download_button("HTMLとして保存", st.session_state.fig_a.to_html(), "scatter_plot.html", "text/html", use_container_width=True)
 
@@ -341,9 +351,19 @@ if st.session_state.df_final is not None:
                     st.write(f"**▼「{y_col}」の基本統計量**")
                     st.dataframe(stats_df, use_container_width=True)
 
-                img_col, html_col = st.columns(2)
-                with img_col:
-                    st.download_button(f"「{y_col}」を画像として保存 (PNG)", fig.to_image(format="png"), f"plot_{y_col}.png", "image/png", use_container_width=True, key=f"png_dl_{i}")
+                # --- ▼▼▼ ここから変更 ▼▼▼ ---
+                svg_col, html_col = st.columns(2)
+                with svg_col:
+                    # PNGをSVGに変更
+                    st.download_button(
+                        label=f"「{y_col}」を画像として保存 (SVG)",
+                        data=fig.to_image(format="svg"),
+                        file_name=f"plot_{y_col}.svg",
+                        mime="image/svg+xml",
+                        use_container_width=True,
+                        key=f"svg_dl_{i}" # キーも変更しておくと安全
+                    )
+                # --- ▲▲▲ ここまで変更 ▲▲▲ ---
                 with html_col:
                     st.download_button(f"「{y_col}」をHTMLとして保存", fig.to_html(), f"plot_{y_col}.html", "text/html", use_container_width=True, key=f"html_dl_{i}")
                 st.markdown("---")
